@@ -1,0 +1,5 @@
+[Dd]ebug/
+[Bb]in/
+[oO]bj/
+.idea/
+appsettings.Development.json

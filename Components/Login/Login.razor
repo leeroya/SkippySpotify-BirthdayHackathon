@@ -1,0 +1,11 @@
+
+@rendermode InteractiveServer
+@inject SpotifyAuthService SpotifyAuthService
+
+<button @onclick="LoginWithSpotify">Login with Spotify</button>
+@code {
+    private void LoginWithSpotify()
+    {
+        SpotifyAuthService.RedirectToSpotifyLogin();
+    }
+}

@@ -1,0 +1,57 @@
+@page "/spotify-callback"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+@inject SpotifyAuthService SpotifyAuthService
+@inject IJSRuntime JsRuntime
+
+
+<h3>Spotify Callback</h3>
+
+<table>
+    <thead>
+    <tr>
+        <td>Country</td>
+        <td>Display Name</td>
+        <td>Email</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>@_Profile.country</td>
+        <td>@_Profile.display_name</td>
+    <td>@_Profile.email</td>
+    </tr>
+    </tbody>
+</table>
+
+@code {
+    public Profile _Profile = new Profile();
+    private static string token;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+            if (query.TryGetValue("code", out var code))
+            {
+                var accessToken = await SpotifyAuthService.GetAccessTokenAsync(code);
+                //token = accessToken;
+                await JsRuntime.InvokeVoidAsync("setAccessToken", accessToken);
+                //var profile = await SpotifyAuthService.GetProfile(accessToken);
+                //_Profile = profile;
+                // Store the access token securely (e.g., in local storage or a secure cookie)
+            }
+        }
+        
+    }
+    
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         await JsRuntime.InvokeVoidAsync("setAccessToken", token);
+    //     }
+    // }
+ 
+}
